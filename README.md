@@ -10,9 +10,9 @@ Built a Policy-as-Code security check using Rego + Conftest in GitHub Codespaces
 
 Learning Outcomes:
 
-Wrote custom Rego policy to deny risky S3 configs
+Wrote a custom Rego policy to deny risky S3 configs
 
-Tested with Conftest in cloud environment
+Tested with Conftest in a cloud environment
 
 Automated GRC compliance check
 
@@ -58,14 +58,18 @@ tar -xzf conftest*.tar.gz && mv conftest ~/.local/bin/
 export PATH="$HOME/.local/bin:$PATH"
 4. Test Execution (From repo root)
 bash
-# FAIL test (public bucket)
+**FAIL test (public bucket)**
 conftest test input.json --all-namespaces
 # FAIL - input.json - S3 buckets cannot be publicly readable
 
-# PASS test (fixed)
-echo '{"resource_type": "aws_s3_bucket", "acl": "private"}' > input.json
+# PASS test (fixed in the input.json file)
+{
+  "resource_type": "aws_s3_bucket",
+  "acl": "private"
+}
 conftest test input.json --all-namespaces  
 # PASS - input.json ✓
+
 What Each Component Does
 File	Purpose
 input.rego	Rego policy denies aws_s3_bucket with public-read ACL
