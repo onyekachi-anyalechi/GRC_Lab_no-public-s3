@@ -1,41 +1,39 @@
 # GRC_Lab_no-public-s3
-GRC Lab for security control - exposed S3 Bucket
-Lab: No Public S3 Buckets - **My Implementation**
-Author: Onyekachi Anyalechi
-Completion Date: March 29, 2026
-Inspired by: ashpearce/GRC-Playground by Ashley Pearce
+* GRC Lab for security control - exposed S3 Bucket
+* Lab: No Public S3 Buckets - **My Implementation**
+* Author: **Onyekachi A**
+* LinkedIn: https://www.linkedin.com/in/onyekachiso/
+* Completion Date: March 29, 2026
+* Inspired by: ashpearce/GRC-Playground by Ashley Pearce: https://github.com/ashpearce/GRC-Playground 
 
-Overview
-Built a Policy-as-Code security check using Rego + Conftest in GitHub Codespaces to prevent public AWS S3 buckets—a critical cloud misconfiguration. Zero local setup required.
+## Overview
+Inspired by Ashley Pearce, I built a Policy-as-Code security check using Rego + Conftest in GitHub Codespaces to prevent public AWS S3 buckets—a critical cloud misconfiguration.
 
-Learning Outcomes:
+## Learning Outcomes:
+* Wrote a custom Rego policy to deny risky S3 configs
+* Tested with Conftest in a cloud environment
+* Automated GRC compliance check
+* Mapped to NIST 800-53 controls
 
-Wrote a custom Rego policy to deny risky S3 configs
-
-Tested with Conftest in a cloud environment
-
-Automated GRC compliance check
-
-Mapped to NIST 800-53 controls
-
-Repository Structure
-text
+### Repository Structure
 GRC-Lab-no-public-s3/
-├── conftest.toml       # Points to ./policy
-├── input.json         # Test data (public → private)
-└── policy/
-    └── input.rego     # My deny policy
+- conftest.toml       # Points to ./policy
+- input.json         # Test data (public → private)
+- policy/
+  - input.rego     # My deny policy
 
-Step-by-Step Implementation
+### Step-by-Step Implementation
 1. GitHub Repo Setup (Web)
-text
 1. github.com → New repo: "GRC-Lab-no-public-s3" (public, empty)
-2. Add file: input.json
-{
-  "resource_type": "aws_s3_bucket",
-  "acl": "public-read"
-}
-3. Add file: policy/input.rego
+2. Add file:
+    - input.json
+```
+    {
+      "resource_type": "aws_s3_bucket",
+      "acl": "public-read"
+    }
+```
+4. Add file: policy/input.rego
 text
 package s3policy
 
