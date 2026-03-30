@@ -33,8 +33,8 @@ GRC-Lab-no-public-s3/
       "acl": "public-read"
     }
 ```
-4. Add file: policy/input.rego
-text
+4. Create a folder policy/input.rego
+```
 package s3policy
 
 deny[message] {
@@ -42,55 +42,60 @@ deny[message] {
   input.acl == "public-read"
   message := "S3 buckets cannot be publicly readable (acl: public-read)"
 }
-text
-4. Add root: conftest.toml
+```
+
+5. Add at the root: conftest.toml
+```
 policy = "./policy"
-2. Codespaces Environment
-text
-Code → Open with Codespaces → Create codespace (free 60hr/mo)
-3. Conftest Install (Codespaces Terminal)
-bash
+```
+
+### Codespaces Environment
+Open with Codespaces
+  - Create codespace (free 60hr/mo)
+```
+Conftest Install (Codespaces Terminal (In my case, Conftest was not preinstalled))
+```
+```
 mkdir -p ~/.local/bin
 wget https://github.com/open-policy-agent/conftest/releases/download/v0.58.0/conftest_0.58.0_Linux_x86_64.tar.gz
 tar -xzf conftest*.tar.gz && mv conftest ~/.local/bin/
 export PATH="$HOME/.local/bin:$PATH"
-4. Test Execution (From repo root)
-bash
-**FAIL test (public bucket)**
+```
+* Test Execution (From codespaces)
+```
 conftest test input.json --all-namespaces
-# FAIL - input.json - S3 buckets cannot be publicly readable
+```
+* Result: FAIL - input.json - S3 buckets cannot be publicly readable
 
-# PASS test (fixed in the input.json file)
+* Fixed in the input.json file
+```
 {
   "resource_type": "aws_s3_bucket",
   "acl": "private"
 }
+```
+* Re-test Execution (From codespaces)
 conftest test input.json --all-namespaces  
-# PASS - input.json ✓
+**Result** PASS - input.json ✓
 
-What Each Component Does
-File	Purpose
-input.rego	Rego policy denies aws_s3_bucket with public-read ACL
-conftest.toml	Configures ./policy as policy directory
-input.json	Simulates Terraform S3 config for testing
---all-namespaces	Enables package s3policy (not just main)
-Control Mapping (NIST 800-53)
-Control	How This Lab Addresses
-AC-6(10)	Least privilege: Blocks over-privileged public access automatically
-SC-12	Public access prevention: Eliminates data exposure risk pre-deployment
-Key Learnings
-Policy-as-Code = GRC automation (not spreadsheets)
+**What Each Component Does**
+* input.rego: Rego policy denies aws_s3_bucket with public-read ACL
+* conftest.toml: Configures ./policy as policy directory
+* input.json: Simulates Terraform S3 config for testing
+* --all-namespaces	Enables package s3policy (not just main)
 
-Rego queries infrastructure like SQL queries data
+**Control Mapping (NIST 800-53)** 
+* AC-6(10)	Least privilege: Blocks over-privileged public access automatically
+* SC-12	Public access prevention: Eliminates data exposure risk pre-deployment
 
-Conftest = compliance testing CLI (CI/CD integration ready)
+**Key Learnings**
+* Policy-as-Code = GRC automation (not spreadsheets)
+* Rego queries infrastructure like SQL queries data
+* Conftest = compliance testing CLI (CI/CD integration ready)
+* GitHub Codespaces = zero-setup learning environment
+* Shift Left: Catch misconfigs before they deploy
 
-GitHub Codespaces = zero-setup learning environment
-
-Shift Left: Catch misconfigs before they deploy
-
-Troubleshooting (Real Experience)
-text
-❌ conftest: command not found → Install binary to PATH
-❌ No policies found → Use --all-namespaces for custom packages  
+**Troubleshooting (Real Experience)**  
+❌ conftest: command not found → Install binary to PATH  
+❌ No policies found → Use --all-namespaces for custom packages   
 ❌ Path errors → Run from repo root (conftest.toml location)
